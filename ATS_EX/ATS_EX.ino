@@ -232,7 +232,7 @@ void rotaryEncoder()
     uint8_t encoderStatus = g_encoder.process();
     if (encoderStatus)
     {
-        g_encoderCount = (encoderStatus == DIR_CW) ? 1 : -1;
+        g_encoderCount = ((encoderStatus == DIR_CW) ? 1 : -1) * g_Settings[SettingsIndex::EncSwitch].param;
         g_seekStop = true;
     }
 }
@@ -344,12 +344,13 @@ void showFrequency(bool cleanDisplay = false)
     if (g_settingsActive)
         return;
 
+    bool ssb = isSSB();
     char unit[4];
     char freqDisplay[7];
     char ssbSuffix[4];
     static uint8_t prevLen = 0;
     uint16_t khzBFO, tailBFO;
-    uint8_t off = (isSSB() ? -5 : 4) + 8;
+    uint8_t off = (ssb ? -5 : 4) + 8;
 
     unit[0] = 'k';
     unit[1] = 'H';
@@ -371,7 +372,7 @@ void showFrequency(bool cleanDisplay = false)
         if (g_bandIndex == SW_BAND_TYPE)
             showBandTag();
 
-        if (!isSSB())
+        if (!ssb)
         {
             bool swMhz = g_Settings[SettingsIndex::SWUnits].param == 1;
             convertToChar(freqDisplay, g_currentFrequency, 5, (g_bandIndex == SW_BAND_TYPE && swMhz) ? 2 : 0, '.', '/');
@@ -386,18 +387,18 @@ void showFrequency(bool cleanDisplay = false)
         }
     }
 
-    uint8_t len = isSSB() ? ilen(khzBFO) : ilen(g_currentFrequency);
+    uint8_t len = ssb ? ilen(khzBFO) : ilen(g_currentFrequency);
     if (cleanDisplay)
     {
         oled.setCursor(0, 3);
         oledPrint("/////////", 0, 3, FONT14X24SEVENSEG); // This character is an empty space in my seven seg font.
     }
-    else if (isSSB() && len > prevLen && len == 5)
+    else if (ssb && len > prevLen && len == 5)
         oledPrint("   ", 102, 4, DEFAULT_FONT);
 
     oledPrint(freqDisplay, off, 3, FONT14X24SEVENSEG);
 
-    if (isSSB())
+    if (ssb)
     {
         //utoa((ilen(tailBFO) == 1) ? &ssbSuffix[2] : &ssbSuffix[1], tailBFO);
         convertToChar((ilen(tailBFO) == 1) ? &ssbSuffix[2] : &ssbSuffix[1], tailBFO, ilen(tailBFO));
@@ -407,9 +408,9 @@ void showFrequency(bool cleanDisplay = false)
             oledPrint("/");
     }
 
-    if (g_Settings[SettingsIndex::UnitsSwitch].param == 1 && (!isSSB() || isSSB() && len < 5))
+    if (g_Settings[SettingsIndex::UnitsSwitch].param == 1 && (!ssb || len < 5))
         oledPrint(unit, 102, 4, DEFAULT_FONT);
-        
+
     prevLen = len;
 }
 
@@ -568,6 +569,21 @@ void SettingParamToUI(char* buf, uint8_t idx)
 
             buf[1] = 'S';
             buf[2] = 'B';
+        }
+        else if (idx == SettingsIndex::EncSwitch)
+        {
+            if (param == -1)
+            {
+                buf[0] = 'N';
+                buf[1] = 'O';
+                buf[2] = 'R';
+            }
+            else
+            {
+                buf[0] = 'R';
+                buf[1] = 'E';
+                buf[2] = 'V';
+            }
         }
         else if (idx == SettingsIndex::CPUSpeed)
         {
@@ -1363,6 +1379,12 @@ void doCWSwitch(int8_t v = 0)
 
     if (g_currentMode == CW)
         applyBandConfiguration(true);
+}
+
+//Settings: Encoder's direction switch CW/CCW
+void doEncoderDirSwitch(int8_t v = -1)
+{
+    g_Settings[SettingsIndex::EncSwitch].param *= -1;
 }
 
 #if USE_RDS

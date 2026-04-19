@@ -136,6 +136,8 @@ Navigate in settings with **Encoder Rotation**, confirm selection with **Encoder
 
 **CW** : **CW Side mode**. Based on **LSB** or **USB** modulation.
 
+**Enc** : **Encoder direction**. Changes the encoder's direction of operation between NOR and REV. NOR - normal mode, CW increases param value, REV - CCW increases param value.
+
 ### Display elements description
 
 <p align="center">

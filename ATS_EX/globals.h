@@ -72,6 +72,7 @@ void doBFOCalibration(int8_t v);
 void doUnitsSwitch(int8_t v = 0);
 void doScanSwitch(int8_t v = 0);
 void doCWSwitch(int8_t v = 0);
+void doEncoderDirSwitch(int8_t v = -1);
 
 SettingsItem g_Settings[] =
 {
@@ -96,6 +97,7 @@ SettingsItem g_Settings[] =
     { "Uni", 1,  SettingType::Switch,       doUnitsSwitch     },  //Show/Hide frequency units
     { "Sca", 1,  SettingType::Switch,       doScanSwitch      },  //AM Encoder scan switch
     { "CW ", 0,  SettingType::Switch,       doCWSwitch        },  //CW is LSB or USB
+    { "Enc", 1,  SettingType::Switch,       doEncoderDirSwitch},  //Changes the encoder's direction
 };
 
 enum SettingsIndex
@@ -118,6 +120,7 @@ enum SettingsIndex
     UnitsSwitch,
     ScanSwitch,
     CWSwitch,
+    EncSwitch,
     SETTINGS_MAX
 };
 

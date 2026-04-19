@@ -232,7 +232,7 @@ void rotaryEncoder()
     uint8_t encoderStatus = g_encoder.process();
     if (encoderStatus)
     {
-        g_encoderCount = (encoderStatus == DIR_CCW) ? 1 : -1;
+        g_encoderCount = (encoderStatus == DIR_CW) ? -1 : 1;
         g_seekStop = true;
     }
 }

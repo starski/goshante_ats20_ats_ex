@@ -12,15 +12,15 @@ const unsigned char ttable[6][4] = {
   // R_START (00)
   {R_START_M, R_CW_BEGIN, R_CCW_BEGIN, R_START},
   // R_CCW_BEGIN
-  {R_START_M | DIR_CCW, R_START, R_CCW_BEGIN, R_START},
+  {R_START_M | DIR_CW, R_START, R_CCW_BEGIN, R_START},
   // R_CW_BEGIN
-  {R_START_M | DIR_CW, R_CW_BEGIN, R_START, R_START},
+  {R_START_M | DIR_CCW, R_CW_BEGIN, R_START, R_START},
   // R_START_M (11)
   {R_START_M, R_CCW_BEGIN_M, R_CW_BEGIN_M, R_START},
   // R_CW_BEGIN_M
-  {R_START_M, R_START_M, R_CW_BEGIN_M, R_START | DIR_CW},
+  {R_START_M, R_START_M, R_CW_BEGIN_M, R_START | DIR_CCW},
   // R_CCW_BEGIN_M
-  {R_START_M, R_CCW_BEGIN_M, R_START_M, R_START | DIR_CCW},
+  {R_START_M, R_CCW_BEGIN_M, R_START_M, R_START | DIR_CW},
 };
 #else
 // Use the full-step state table (emits a code at 00 only)
@@ -36,7 +36,7 @@ const unsigned char ttable[7][4] =
   // R_START
   {R_START, R_CW_BEGIN, R_CCW_BEGIN, R_START},
   // R_CW_FINAL
-  {R_CW_NEXT, R_START, R_CW_FINAL, R_START | DIR_CW},
+  {R_CW_NEXT, R_START, R_CW_FINAL, R_START | DIR_CCW},
   // R_CW_BEGIN
   {R_CW_NEXT, R_CW_BEGIN, R_START, R_START},
   // R_CW_NEXT
@@ -44,7 +44,7 @@ const unsigned char ttable[7][4] =
   // R_CCW_BEGIN
   {R_CCW_NEXT, R_START, R_CCW_BEGIN, R_START},
   // R_CCW_FINAL
-  {R_CCW_NEXT, R_CCW_FINAL, R_START, R_START | DIR_CCW},
+  {R_CCW_NEXT, R_CCW_FINAL, R_START, R_START | DIR_CW},
   // R_CCW_NEXT
   {R_CCW_NEXT, R_CCW_FINAL, R_CCW_BEGIN, R_START},
 };

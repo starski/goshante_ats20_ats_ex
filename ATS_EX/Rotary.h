@@ -11,8 +11,8 @@
 
 // Values returned by 'process'
 #define DIR_NONE 0x0    // No complete step yet
-#define DIR_CCW   0x10   // Clockwise step
-#define DIR_CW  0x20   // Anti-clockwise step
+#define DIR_CW   0x20   // Clockwise step
+#define DIR_CCW  0x10   // Anti-clockwise step
 
 class Rotary
 {
